@@ -1,6 +1,7 @@
 use std::io;
 use std::path::{PathBuf};
 use std::process::Command;
+use colored::*;
 
 fn main() -> io::Result<()> {
 
@@ -31,13 +32,11 @@ fn pull_repository(repository: &PathBuf) -> io::Result<()> {
     Command::new("git")
         .args(&["-C", repository.to_str().unwrap(), "pull",])
         .output()
-        .and_then(|output| {
-            println!("{}", String::from_utf8_lossy(&output.stderr));
-            Ok(output)
-
-        })
         .and_then(|output| match output.status.success() {
             true => Ok(()),
-            false => Err(io::Error::new(io::ErrorKind::Other, "Failed to pull"))
+            false => {
+                println!("{}", String::from_utf8_lossy(&output.stderr).red());
+                Err(io::Error::new(io::ErrorKind::Other, "Failed to pull"))
+            }
         })
 }
