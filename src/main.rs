@@ -4,9 +4,9 @@ use std::process::Command;
 
 fn main() -> io::Result<()> {
 
-    let prsh_dir = std::env::current_dir()?;
+    let cwd = std::env::current_dir()?;
 
-    let paths: Vec<PathBuf> = std::fs::read_dir(prsh_dir)?
+    let paths: Vec<PathBuf> = std::fs::read_dir(cwd)?
         .filter_map(|e| e.ok())
         .map(|e| e.path())
         .filter(is_git_repo)
